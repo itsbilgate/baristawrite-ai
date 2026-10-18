@@ -60,7 +60,7 @@
         </div>
         <p><strong>Your role:</strong> You are the barista replying to the customer.</p>
         <ul>
-          <li>Write 60–90 words.</li>
+          <li>Write at least 30 words.</li>
           <li>Apologize politely and acknowledge that the café used the wrong milk.</li>
           <li>Briefly explain that the café had run out of oat milk, while making clear that the customer should have been informed and asked before the drink was prepared.</li>
           <li>Explain how you will resolve the issue, such as offering an appropriate replacement or refund according to café policy.</li>
@@ -68,7 +68,7 @@
         </ul>
         <label for="response">Your response</label>
         <textarea id="response" placeholder="Hello, I'm sorry we made your latte with regular milk. We had run out of oat milk, but we should have told you and asked before preparing your drink..."></textarea>
-        <div class="meta"><span id="wordCount">0 words</span><span>Suggested length: 60–90 words</span></div>
+        <div class="meta"><span id="wordCount">0 words</span><span>Minimum length: 30 words</span></div>
         <button id="assessBtn">Review my writing</button>
         <button id="clearBtn" class="secondary" type="button">Clear</button>
         <p class="notice">This first version uses transparent, rule-based checks. It does not send your writing to an external AI model.</p>
@@ -122,7 +122,7 @@
       let org = words >= 45 && words <= 105 && sentences >= 2 ? 4 : words >= 30 && sentences >= 2 ? 3 : words >= 15 ? 2 : 1;
       let tone = (polite ? 2 : 1) + (blame ? -1 : 1);
       tone = Math.max(1, Math.min(4, tone));
-      let language = words >= 60 && words <= 90 ? 4 : words >= 45 && words <= 105 ? 3 : words >= 25 ? 2 : 1;
+      let language = words >= 30 ? (words >= 60 && words <= 90 ? 4 : 3) : words >= 20 ? 2 : 1;
       return { scores:[task,org,tone,language], flags:{apology,problem,solution,polite,blame,words,sentences} };
     }
     document.getElementById('assessBtn').addEventListener('click', () => {
@@ -146,7 +146,7 @@
         div.append(head,p); criteria.append(div);
       });
       const tasks = [
-        [words >= 60 && words <= 90, 'Keep the response between 60 and 90 words (current: ' + words + ').'],
+        [words >= 60 && words <= 90, 'Keep the response at least 30 words (current: ' + words + ').'],
         [result.flags.apology, 'Include a clear apology.'],
         [result.flags.problem, 'Acknowledge that regular milk was used instead of oat milk.'],
         [result.flags.solution, 'Explain the next step, such as remaking the drink or offering an appropriate solution.'],
