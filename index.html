@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BaristaWrite AI | Writing Assessment</title>
+  <style>
+    :root { --ink:#20312b; --muted:#66756e; --paper:#f7f6f0; --card:#fffefa; --line:#dce2d9; --green:#285d48; --mint:#e6f0e7; --amber:#8b5a16; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--paper); color:var(--ink); font:16px/1.55 system-ui,-apple-system,Segoe UI,sans-serif; }
+    header { background:#203f33; color:#fff; padding:30px 20px 36px; }
+    .wrap { max-width:1000px; margin:0 auto; }
+    .eyebrow { font-size:.78rem; letter-spacing:.12em; text-transform:uppercase; opacity:.8; }
+    h1 { margin:.35rem 0; font-size:clamp(2rem,5vw,3.2rem); line-height:1.1; }
+    header p { max-width:680px; color:#e1ebe4; margin:.7rem 0 0; }
+    main { padding:26px 20px 60px; }
+    .layout { display:grid; grid-template-columns:minmax(0,1.1fr) minmax(280px,.9fr); gap:20px; align-items:start; }
+    .card { background:var(--card); border:1px solid var(--line); border-radius:18px; padding:22px; box-shadow:0 5px 20px #1d3a2c08; }
+    h2 { font-size:1.2rem; margin:0 0 12px; }
+    .scenario { background:var(--mint); padding:14px 16px; border-radius:12px; margin-bottom:18px; }
+    .scenario strong { display:block; margin-bottom:4px; }
+    label { display:block; font-weight:650; margin:16px 0 7px; }
+    textarea { width:100%; min-height:230px; padding:13px; border:1px solid #bfcac0; border-radius:10px; font:inherit; resize:vertical; background:white; color:var(--ink); }
+    textarea:focus { outline:3px solid #c3ddca; border-color:var(--green); }
+    .meta { display:flex; justify-content:space-between; color:var(--muted); font-size:.88rem; margin-top:6px; gap:12px; }
+    button { border:0; background:var(--green); color:white; padding:12px 18px; border-radius:10px; font:inherit; font-weight:700; cursor:pointer; margin-top:15px; }
+    button:hover { background:#1e4937; }
+    button:focus-visible { outline:3px solid #9dc8a8; outline-offset:3px; }
+    .secondary { background:transparent; color:var(--green); border:1px solid var(--line); margin-left:8px; }
+    .secondary:hover { background:var(--mint); color:var(--ink); }
+    .notice { color:var(--muted); font-size:.88rem; }
+    .hidden { display:none; }
+    .score { display:flex; align-items:baseline; gap:8px; padding:12px 0 16px; border-bottom:1px solid var(--line); }
+    .score strong { font-size:2.2rem; line-height:1; }
+    .criterion { padding:13px 0; border-bottom:1px solid var(--line); }
+    .criterion:last-child { border-bottom:0; }
+    .criterion-head { display:flex; justify-content:space-between; gap:12px; font-weight:700; }
+    .pill { background:var(--mint); color:var(--green); padding:2px 9px; border-radius:99px; font-size:.86rem; white-space:nowrap; }
+    .criterion p { margin:6px 0 0; color:var(--muted); font-size:.94rem; }
+    ul { padding-left:20px; }
+    footer { color:var(--muted); font-size:.84rem; margin-top:20px; }
+    @media (max-width:760px) { .layout { grid-template-columns:1fr; } .card { padding:18px; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div class="eyebrow">English for Baristas · ESP Writing Assessment</div>
+      <h1>BaristaWrite <span style="color:#b9d9bd">AI</span></h1>
+      <p>Practice professional customer-service writing. Draft a reply, review rubric-guided feedback, and revise your message.</p>
+    </div>
+  </header>
+  <main class="wrap">
+    <div class="layout">
+      <section class="card">
+        <h2>Writing task</h2>
+        <div class="scenario">
+          <strong>Scenario: Incorrect milk in a latte</strong>
+          A customer messages the café: “I ordered an oat-milk latte, but my drink was made with regular milk. I specifically asked for oat milk, and I’m upset.”
+        </div>
+        <p><strong>Your role:</strong> You are the barista replying to the customer.</p>
+        <ul>
+          <li>Write 60–90 words.</li>
+          <li>Apologize politely and acknowledge the specific problem.</li>
+          <li>Explain how you will resolve it.</li>
+          <li>Use a professional, friendly tone. Do not blame the customer or a colleague.</li>
+        </ul>
+        <label for="response">Your response</label>
+        <textarea id="response" placeholder="Hello, I'm sorry that we prepared your latte with regular milk instead of oat milk..."></textarea>
+        <div class="meta"><span id="wordCount">0 words</span><span>Suggested length: 60–90 words</span></div>
+        <button id="assessBtn">Review my writing</button>
+        <button id="clearBtn" class="secondary" type="button">Clear</button>
+        <p class="notice">This first version uses transparent, rule-based checks. It does not send your writing to an external AI model.</p>
+      </section>
+      <section class="card" aria-live="polite">
+        <h2>Feedback report</h2>
+        <div id="emptyState">
+          <p>Your feedback will appear here after you submit your response.</p>
+          <p class="notice">The draft rubric considers task completion, organization and clarity, tone and audience awareness, and language use.</p>
+        </div>
+        <div id="report" class="hidden">
+          <div class="score"><strong id="totalScore">—</strong><span>/ 16 points · provisional rubric indicator</span></div>
+          <p id="summary"></p>
+          <div id="criteria"></div>
+          <h2 style="margin-top:18px">Revision checklist</h2>
+          <ul id="checklist"></ul>
+          <p class="notice">This score is only a prototype estimate based on simple text checks, not a validated grade. A teacher should review the writing.</p>
+        </div>
+      </section>
+    </div>
+    <footer>
+      Course prototype · English for Baristas · Assessment task derived from a proposed workplace-writing objective. Specific objectives and scoring rules require instructor review and pilot testing.
+    </footer>
+  </main>
+  <script>
+    const response = document.getElementById('response');
+    const wordCount = document.getElementById('wordCount');
+    const report = document.getElementById('report');
+    const emptyState = document.getElementById('emptyState');
+    const countWords = text => (text.trim().match(/\b[\w’'-]+\b/g) || []).length;
+    response.addEventListener('input', () => {
+      const n = countWords(response.value);
+      wordCount.textContent = n + (n === 1 ? ' word' : ' words');
+    });
+    const criteriaInfo = [
+      { name:'Task completion', feedback: score => score >= 4 ? 'Your response appears to cover the main complaint-response moves.' : score === 3 ? 'Most key moves are present. Check that the specific problem and next step are both clear.' : 'Add a direct apology, name the incorrect milk choice, and state a practical solution.' },
+      { name:'Organization and clarity', feedback: score => score >= 4 ? 'Your message appears concise and easy to follow.' : score === 3 ? 'The message is reasonably clear. Check the order of ideas and remove repetition.' : 'Use a simple sequence: apology, acknowledge the mistake, explain the solution.' },
+      { name:'Tone and audience awareness', feedback: score => score >= 4 ? 'Your wording includes polite customer-service language.' : score === 3 ? 'The tone is generally suitable. Consider adding a more empathetic phrase.' : 'Use a polite apology and empathetic language; avoid blaming the customer or a colleague.' },
+      { name:'Language use', feedback: score => score >= 4 ? 'Your draft is within the target length and appears to use complete sentences.' : score === 3 ? 'Check grammar, word choice, and sentence boundaries before submitting.' : 'Revise incomplete sentences and check that your message is easy to understand.' }
+    ];
+    function rate(text, words) {
+      const t = text.toLowerCase();
+      const apology = /\b(sorry|apolog|apologi|regret)\b/.test(t);
+      const problem = /(oat.?milk|regular milk|wrong milk|instead of oat|milk.*(mistake|wrong)|mistake.*milk)/.test(t);
+      const solution = /(remak|make.*(new|another)|prepare.*(new|another)|replace|correct.*drink|new latte|refund|fix this|sort this out)/.test(t);
+      const polite = /(thank you|thanks|please|appreciate|understand|sorry|apolog|happy to|certainly|of course)/.test(t);
+      const blame = /(your fault|you should have|you ordered wrong|not our problem|my colleague.*fault)/.test(t);
+      const sentences = (text.match(/[.!?]+(?=\s|$)/g) || []).length;
+      let task = 1 + Number(apology) + Number(problem) + Number(solution);
+      task = Math.min(4, task);
+      let org = words >= 45 && words <= 105 && sentences >= 2 ? 4 : words >= 30 && sentences >= 2 ? 3 : words >= 15 ? 2 : 1;
+      let tone = (polite ? 2 : 1) + (blame ? -1 : 1);
+      tone = Math.max(1, Math.min(4, tone));
+      let language = words >= 60 && words <= 90 ? 4 : words >= 45 && words <= 105 ? 3 : words >= 25 ? 2 : 1;
+      return { scores:[task,org,tone,language], flags:{apology,problem,solution,polite,blame,words,sentences} };
+    }
+    document.getElementById('assessBtn').addEventListener('click', () => {
+      const text = response.value.trim();
+      const words = countWords(text);
+      if (!text) { alert('Please write your response before requesting feedback.'); response.focus(); return; }
+      const result = rate(text, words);
+      const total = result.scores.reduce((a,b) => a+b,0);
+      document.getElementById('totalScore').textContent = total;
+      document.getElementById('summary').textContent = total >= 14 ? 'Your draft shows several useful customer-service writing features. Review the notes below before revising.' : total >= 10 ? 'Your draft has a starting point. Use the criterion feedback to strengthen the message.' : 'Use the checklist to add the essential information and make your reply more professional.';
+      const criteria = document.getElementById('criteria');
+      criteria.innerHTML = '';
+      criteriaInfo.forEach((item,i) => {
+        const div = document.createElement('div');
+        div.className = 'criterion';
+        const head = document.createElement('div'); head.className = 'criterion-head';
+        const name = document.createElement('span'); name.textContent = item.name;
+        const pill = document.createElement('span'); pill.className='pill'; pill.textContent = result.scores[i] + ' / 4';
+        head.append(name,pill);
+        const p = document.createElement('p'); p.textContent = item.feedback(result.scores[i]);
+        div.append(head,p); criteria.append(div);
+      });
+      const tasks = [
+        [words >= 60 && words <= 90, 'Keep the response between 60 and 90 words (current: ' + words + ').'],
+        [result.flags.apology, 'Include a clear apology.'],
+        [result.flags.problem, 'Acknowledge that regular milk was used instead of oat milk.'],
+        [result.flags.solution, 'Explain the next step, such as remaking the drink or offering an appropriate solution.'],
+        [result.flags.polite && !result.flags.blame, 'Maintain a polite, empathetic tone without blaming anyone.'],
+        [result.flags.sentences >= 2, 'Use complete sentences and organize ideas in a logical order.']
+      ];
+      const list = document.getElementById('checklist'); list.innerHTML='';
+      tasks.forEach(([ok,label]) => { const li=document.createElement('li'); li.textContent=(ok?'✓ ':'□ ')+label; list.append(li); });
+      emptyState.classList.add('hidden'); report.classList.remove('hidden');
+    });
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      response.value=''; wordCount.textContent='0 words'; report.classList.add('hidden'); emptyState.classList.remove('hidden'); response.focus();
+    });
+  </script>
+</body>
+</html>
